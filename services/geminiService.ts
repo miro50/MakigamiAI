@@ -157,13 +157,11 @@ const MAKIGAMI_SCHEMA: Schema = {
 let aiInstance: GoogleGenAI | null = null;
 
 const getAi = (): GoogleGenAI => {
-  if (!aiInstance) {
-    if (!process.env.API_KEY) {
-      throw new Error("API_KEY environment variable is missing.");
-    }
-    aiInstance = new GoogleGenAI({ apiKey: process.env.API_KEY });
-  }
-  return aiInstance;
+if (!aiInstance) {
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+
+}
+return aiInstance;
 };
 
 export const generateMakigamiAnalysis = async (inputText: string): Promise<MakigamiProcess> => {
