@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { supabase } from './lib/supabase';
+import { supabase } from './supabase';
 import { Layout, LogIn, Mail, Lock, Loader2, UserPlus } from 'lucide-react';
 
 export const Auth: React.FC = () => {
