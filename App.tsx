@@ -10,7 +10,7 @@ import ProcessReview from './components/ProcessReview';
 import ProcessDetailsTable from './components/ProcessDetailsTable';
 import ComparisonView from './components/ComparisonView';
 import { Sparkles, RotateCcw, Layout, FileText, Search, Split, ArrowLeft, Shuffle, BookOpen, LogOut, User } from 'lucide-react';
-import { supabase } from './lib/supabase';
+import { supabase } from './supabase';
 import { Auth } from './Auth';
 import { Session } from '@supabase/supabase-js';
 
