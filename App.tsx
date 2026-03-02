@@ -6,7 +6,6 @@ import MakigamiVisualizer from './components/MakigamiVisualizer';
 import MetricsDashboard from './components/MetricsDashboard';
 import ChatAssistant from './components/ChatAssistant';
 import KaizenList from './components/KaizenList';
-//import LandingPage from './components/LandingPage';
 import ProcessReview from './components/ProcessReview';
 import ProcessDetailsTable from './components/ProcessDetailsTable';
 import ComparisonView from './components/ComparisonView';
