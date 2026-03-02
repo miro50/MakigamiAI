@@ -1,24 +1,4 @@
-Ottima intuizione a mandarmi gli screenshot! Grazie all'ultima foto che hai allegato, abbiamo finalmente beccato il colpevole con le mani nella marmellata.
 
-L'errore esatto è questo:
-"The thinking budget 32768 is invalid. Please choose a value between 0 and 24576."
-
-Cosa significa e perché succede?
-Quando usavamo il modello "Pro", nel codice gli avevamo impostato un "budget di pensiero" (thinking budget) altissimo, pari a 32768. Questo serviva per fargli fare ragionamenti lunghissimi prima di rispondere.
-Passando al nuovo modello Flash, che è progettato per essere scattante e veloce, le regole di Google dicono che il budget massimo consentito è 24576. Noi gli stavamo mandando un numero fuori scala, e lui si rifiutava di partire!
-
-Risolviamolo sbarazzandoci completamente di questo "budget di pensiero". Il modello Flash è già abbastanza intelligente di suo e per generare la mappa non ne ha bisogno.
-
-Ecco l'ultimissima (e spero definitiva!) versione del file.
-
-Come risolvere su GitHub in 30 secondi:
-Apri src/services/geminiService.ts su GitHub e clicca sulla matita.
-
-CANCELLA TUTTO il contenuto del file.
-
-Copia tutto il testo qui sotto (da INIZIO a FINE) e incollalo. Ho rimosso tutti i blocchi thinkingConfig che mandavano in blocco il sistema.
-
-INIZIO CODICE
 
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { MakigamiProcess } from "../types";
