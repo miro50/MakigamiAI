@@ -6,6 +6,7 @@ import MakigamiVisualizer from './components/MakigamiVisualizer';
 import MetricsDashboard from './components/MetricsDashboard';
 import ChatAssistant from './components/ChatAssistant';
 import KaizenList from './components/KaizenList';
+import LandingPage from './components/LandingPage';
 import ProcessReview from './components/ProcessReview';
 import ProcessDetailsTable from './components/ProcessDetailsTable';
 import ComparisonView from './components/ComparisonView';
@@ -34,6 +35,7 @@ L'ufficio acquisti individua un potenziale nuovo fornitore e gli invia via email
 
 function App() {
   const [session, setSession] = useState<Session | null>(null);
+  const [showLogin, setShowLogin] = useState(false);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [inputText, setInputText] = useState(DEFAULT_INPUT);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -173,8 +175,23 @@ function App() {
   }
 
   if (!session) {
-    return <Auth />;
-  }
+if (showLogin) {
+return (
+<div className="min-h-screen bg-slate-50 flex flex-col">
+<div className="p-4">
+<button
+onClick={() => setShowLogin(false)}
+className="text-sm text-slate-500 hover:text-indigo-600 flex items-center gap-2 font-medium transition-colors"
+>
+<ArrowLeft className="w-4 h-4" /> Torna alla Home
+</button>
+</div>
+<Auth />
+</div>
+);
+}
+return <LandingPage onLoginClick={() => setShowLogin(true)} />;
+}
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-20">
