@@ -11,6 +11,7 @@ import ProcessReview from './components/ProcessReview';
 import ProcessDetailsTable from './components/ProcessDetailsTable';
 import ComparisonView from './components/ComparisonView';
 import { supabase } from './supabase';
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import Auth from './components/Auth';
 import { Auth } from './Auth';
 import { Session } from '@supabase/supabase-js';
