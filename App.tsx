@@ -174,7 +174,12 @@ function App() {
     );
   }
 
+  
   if (!session) {
+return <Auth />;
+}
+  
+  /*if (!session) {
 if (showLogin) {
 return (
 <div className="min-h-screen bg-slate-50 flex flex-col">
@@ -191,7 +196,7 @@ className="text-sm text-slate-500 hover:text-indigo-600 flex items-center gap-2 
 );
 }
 return <LandingPage onLoginClick={() => setShowLogin(true)} />;
-}
+}*/
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-20">
