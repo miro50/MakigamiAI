@@ -1,3 +1,25 @@
+Ottima intuizione a mandarmi gli screenshot! Grazie all'ultima foto che hai allegato, abbiamo finalmente beccato il colpevole con le mani nella marmellata.
+
+L'errore esatto è questo:
+"The thinking budget 32768 is invalid. Please choose a value between 0 and 24576."
+
+Cosa significa e perché succede?
+Quando usavamo il modello "Pro", nel codice gli avevamo impostato un "budget di pensiero" (thinking budget) altissimo, pari a 32768. Questo serviva per fargli fare ragionamenti lunghissimi prima di rispondere.
+Passando al nuovo modello Flash, che è progettato per essere scattante e veloce, le regole di Google dicono che il budget massimo consentito è 24576. Noi gli stavamo mandando un numero fuori scala, e lui si rifiutava di partire!
+
+Risolviamolo sbarazzandoci completamente di questo "budget di pensiero". Il modello Flash è già abbastanza intelligente di suo e per generare la mappa non ne ha bisogno.
+
+Ecco l'ultimissima (e spero definitiva!) versione del file.
+
+Come risolvere su GitHub in 30 secondi:
+Apri src/services/geminiService.ts su GitHub e clicca sulla matita.
+
+CANCELLA TUTTO il contenuto del file.
+
+Copia tutto il testo qui sotto (da INIZIO a FINE) e incollalo. Ho rimosso tutti i blocchi thinkingConfig che mandavano in blocco il sistema.
+
+INIZIO CODICE
+
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { MakigamiProcess } from "../types";
 
@@ -184,6 +206,11 @@ const ai = initGemini();
 const prompt = `
 Analyze the following process description.
 
+Process Description:
+"${inputText}"
+
+IMPORTANT: Convert all times to MINUTES.
+Use the rule: 1 Day = 8 Hours = 480 Minutes.
 `;
 
 try {
@@ -193,13 +220,14 @@ contents: prompt,
 config: {
 systemInstruction: SYSTEM_INSTRUCTION,
 responseMimeType: "application/json",
-responseSchema: MAKIGAMI_SCHEMA,
-thinkingConfig: {
-thinkingBudget: 32768
-}
+responseSchema: MAKIGAMI_SCHEMA
 }
 });
 
+const text = response.text;
+if (!text) throw new Error("No response generated");
+
+return JSON.parse(text) as MakigamiProcess;
 } catch (error) {
 console.error("Gemini Generation Error:", error);
 throw error;
@@ -212,16 +240,31 @@ const ai = initGemini();
 const prompt = `
 SEI UN CONSULENTE LEAN SIX SIGMA MASTER BLACK BELT.
 
+CONTESTO PROCESSO:
+${processContext}
+
+OPPORTUNITÀ KAIZEN IDENTIFICATA:
+Step: ${problemTitle}
+Suggerimento iniziale: ${problemDesc}
+
+RICHIESTA:
+Sviluppa un PIANO DI IMPLEMENTAZIONE DETTAGLIATO per questa specifica opportunità.
+Non limitarti a dire "cosa" fare, spiega "come" farlo tecnicamente e operativamente.
+
+STRUTTURA LA RISPOSTA:
+1. 🎯 **Obiettivo Specifico**: Quale metrica migliorerà e di quanto (stima)?
+2. ⚙️ **Configurazione Tecnica/Operativa**:
+   - Se Automazione: Quali trigger, azioni o integrazioni API servono?
+   - Se Processo: Quali regole di business o soglie modificare?
+3. 📉 **Impatto sui Tempi**: Stima della riduzione di Touch Time o Wait Time.
+4. 🚧 **Piano d'Azione Immediato**: 3 bullet point per l'esecuzione.
+
+Usa un tono pragmatico, tecnico e orientato al risultato.
 `;
 
 const response = await ai.models.generateContent({
-model: 'gemini-3.1-pro-preview',
-contents: prompt,
-config: {
-thinkingConfig: {
-thinkingBudget: 32768
-}
-}
+model: 'gemini-2.5-flash',
+contents: prompt
 });
 
 return response.text || "Could not generate a solution at this time.";
@@ -235,22 +278,36 @@ CONTEXT:
 The following JSON represents an "As-Is" business process (Current State).
 ${JSON.stringify(asIsProcess)}
 
+TASK:
+Generate a "To-Be" Makigami Process Map (Future State) by applying Lean Six Sigma principles.
+
+CRITICAL INSTRUCTION - EXECUTION OF KAIZEN:
+You MUST explicitly implement the specific suggestions listed in the 'kaizen_recommendations' array of the input JSON.
+The To-Be state is the DIRECT REALIZATION of those recommendations.
+
+1. If a recommendation says "Automate", change the Swimlane to 'SYSTEM' and reduce Touch Time to near zero.
+2. If a recommendation says "Eliminate", remove the step entirely.
+3. If a recommendation says "Parallelize", organize steps to happen without wait times.
+
+OUTPUT:
+Return the optimized process strictly in the same JSON format (using MINUTES).
 `;
 
 try {
 const response = await ai.models.generateContent({
-model: 'gemini-3.1-pro-preview',
+model: 'gemini-2.5-flash',
 contents: prompt,
 config: {
 systemInstruction: SYSTEM_INSTRUCTION,
 responseMimeType: "application/json",
-responseSchema: MAKIGAMI_SCHEMA,
-thinkingConfig: {
-thinkingBudget: 32768
-}
+responseSchema: MAKIGAMI_SCHEMA
 }
 });
 
+const text = response.text;
+if (!text) throw new Error("No response generated for To-Be process");
+
+return JSON.parse(text) as MakigamiProcess;
 } catch (error) {
 console.error("Gemini Optimization Error:", error);
 throw error;
@@ -261,12 +318,9 @@ export const chatWithAnalyst = async (history: {role: string, parts: {text: stri
 const ai = initGemini();
 
 const chat = ai.chats.create({
-model: 'gemini-3.1-pro-preview',
+model: 'gemini-2.5-flash',
 config: {
-systemInstruction: CHAT_SYSTEM_INSTRUCTION,
-thinkingConfig: {
-thinkingBudget: 32768
-}
+systemInstruction: CHAT_SYSTEM_INSTRUCTION
 },
 history: history,
 });
