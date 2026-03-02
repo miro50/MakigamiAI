@@ -9,8 +9,8 @@ import KaizenList from './components/KaizenList';
 import ProcessReview from './components/ProcessReview';
 import ProcessDetailsTable from './components/ProcessDetailsTable';
 import ComparisonView from './components/ComparisonView';
-import { Sparkles, RotateCcw, Layout, FileText, Search, Split, ArrowLeft, Shuffle, BookOpen, LogOut, User, Save, History, CheckCircle2, Loader2 } from 'lucide-react';
-import { supabase } from './lib/supabase';
+import { supabase } from './supabase';
+import Auth from './components/Auth';
 import { Auth } from './Auth';
 import { Session } from '@supabase/supabase-js';
 import ProcessHistory from './components/ProcessHistory';
@@ -125,19 +125,19 @@ function App() {
     setInputText(randomExample);
   };
 
-  const handleSave = async () => {
+ const handleSave = async () => {
     if (!processData || !session?.user) return;
     
     setIsSaving(true);
     setSaveSuccess(false);
     try {
       const { error } = await supabase
-        .from('processes')
+        .from('saved_processes') // <- NOME TABELLA CORRETTO
         .insert([
           { 
             user_id: session.user.id,
-            name: processData.meta_analysis.process_name,
-            data: processData
+            process_name: processData.meta_analysis.process_name, // <- NOME COLONNA CORRETTO
+            process_data: processData // <- NOME COLONNA CORRETTO
           }
         ]);
 
@@ -152,6 +152,7 @@ function App() {
       setIsSaving(false);
     }
   };
+ 
 
   const handleLoadFromHistory = (data: MakigamiProcess) => {
     setProcessData(data);
