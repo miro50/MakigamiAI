@@ -372,6 +372,7 @@ return (
       onClose={() => setShowHistory(false)} 
     />
   )}
+  <Analytics />
 </div>
 );
 }
