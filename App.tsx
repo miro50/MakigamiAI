@@ -5,7 +5,7 @@ import MakigamiVisualizer from './components/MakigamiVisualizer';
 import MetricsDashboard from './components/MetricsDashboard';
 import ChatAssistant from './components/ChatAssistant';
 import KaizenList from './components/KaizenList';
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/react"
 import ProcessReview from './components/ProcessReview';
 import ProcessDetailsTable from './components/ProcessDetailsTable';
 import ComparisonView from './components/ComparisonView';
